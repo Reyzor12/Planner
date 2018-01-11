@@ -7,9 +7,9 @@
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
             http://www.springframework.org/schema/tx
-            http://www.springframework.org/schema/tx/spring-tx.sxd
+            http://www.springframework.org/schema/tx/spring-tx.xsd
             http://www.springframework.org/schema/context
-            http://www.springframework.org/schema/context/spring-context.sxd"
+            http://www.springframework.org/schema/context/spring-context.xsd"
 >
     <tx:annotation-driven transaction-manager="transactionManager"/>
     <context:annotation-config/>
@@ -24,21 +24,25 @@
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="packageToScan" value="ru.eleron.osa.lris.planner.entity"/>
+        <!--Вот тут и будет искать ентити классы и мапить их -->
+        <property name="packagesToScan" value="ru.eleron.osa.lris.planner.entity"/>
+        <!--Вот тут базовые настройки -->
         <property name="dataSource" ref="dataSource"/>
+        <!--Говорим какая реализация jpa -->
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
         </property>
+        <!--доп настройки реализации -->
         <property name="jpaProperties">
             <props>
                 <prop key="hibernate.dialect">${dialect}</prop>
                 <prop key="hibernate.show_sql">${showSql}</prop>
-                <prop key="hibernate.hbm2dll.auto">${hbm2dll.auto}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hbm2dll.auto}</prop>
             </props>
         </property>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFacotry"/>
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 </beans>
